@@ -1,0 +1,792 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище Model" Provider="Oracle.ManagedDataAccess.Client" ProviderManifestToken="12.1" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ACCOUNT">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="number" Precision="38" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOGIN" Type="varchar2" MaxLength="30" Nullable="false" />
+          <Property Name="PASSWORD" Type="nvarchar2" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="BLOOD_BANK">
+          <Key>
+            <PropertyRef Name="BLOODBANK_ID" />
+          </Key>
+          <Property Name="BLOODBANK_ID" Type="varchar2" MaxLength="10" Nullable="false" />
+          <Property Name="BLOODBANK_NAME" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="BLOOD_GROUP" Type="varchar2" MaxLength="20" Nullable="false" />
+          <Property Name="BLOOD_AMOUNT" Type="float" Precision="126" Scale="0" />
+          <Property Name="BLOOD_STATUS" Type="varchar2" MaxLength="20" />
+          <Property Name="CHECKING_DATE" Type="date" />
+        </EntityType>
+        <EntityType Name="DONOR">
+          <Key>
+            <PropertyRef Name="DONOR_ID" />
+          </Key>
+          <Property Name="DONOR_ID" Type="number" Precision="38" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DONOR_NAME" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="DONOR_BLOOD_GROUP" Type="varchar2" MaxLength="20" Nullable="false" />
+          <Property Name="DONOR_PHONE_NUMBER" Type="varchar2" MaxLength="20" />
+          <Property Name="DONOR_ADDRESS" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="LAST_DONATION_DATE" Type="date" Nullable="false" />
+          <Property Name="DONOR_STATUS" Type="varchar2" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="TAKER">
+          <Key>
+            <PropertyRef Name="TAKER_ID" />
+          </Key>
+          <Property Name="TAKER_ID" Type="number" Precision="38" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TAKER_NAME" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="TAKER_BLOOD_GROUP" Type="varchar2" MaxLength="20" Nullable="false" />
+          <Property Name="TAKER_ADDRESS" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="TAKER_PHONE_NUMBER" Type="varchar2" MaxLength="20" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "BB_ADMIN.TRANSFER_DETAILS" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="TRANSFER_DETAILS">
+          <Key>
+            <PropertyRef Name="TRANSER_ID" />
+          </Key>
+          <Property Name="TRANSER_ID" Type="number" Precision="38" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BLOODBANK_ID" Type="varchar2" MaxLength="10" />
+          <Property Name="DONOR_ID" Type="number" Precision="38" Scale="0" />
+          <Property Name="TAKER_ID" Type="number" Precision="38" Scale="0" />
+          <Property Name="BLOOD_GROUP" Type="varchar2" MaxLength="20" />
+          <Property Name="BLOOD_AMOUNT" Type="float" Precision="126" Scale="0" />
+          <Property Name="TRANSFER_DATE" Type="date" />
+        </EntityType>
+        <Association Name="SYS_C0010172">
+          <End Role="BLOOD_BANK" Type="Self.BLOOD_BANK" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOOD_BANK">
+              <PropertyRef Name="BLOODBANK_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="BLOODBANK_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SYS_C0010173">
+          <End Role="DONOR" Type="Self.DONOR" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DONOR">
+              <PropertyRef Name="DONOR_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="DONOR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SYS_C0010174">
+          <End Role="TAKER" Type="Self.TAKER" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TAKER">
+              <PropertyRef Name="TAKER_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="TAKER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ADD_NEW_ACCOUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="P_LOGIN" Type="varchar2" Mode="In" />
+          <Parameter Name="P_PASSWORD" Type="nvarchar2" Mode="In" />
+        </Function>
+        <Function Name="ADD_NEW_BLOOD_BANK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="BBID" Type="varchar2" Mode="In" />
+          <Parameter Name="BBNAME" Type="varchar2" Mode="In" />
+          <Parameter Name="BBBGROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="BBBAMOUNT" Type="float" Mode="In" />
+          <Parameter Name="BBCHAECKINGD" Type="date" Mode="In" />
+        </Function>
+        <Function Name="ADD_NEW_DONOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="DNAME" Type="varchar2" Mode="In" />
+          <Parameter Name="DBLOOD" Type="varchar2" Mode="In" />
+          <Parameter Name="DADDRESS" Type="varchar2" Mode="In" />
+          <Parameter Name="DCONTACT" Type="varchar2" Mode="In" />
+          <Parameter Name="DLDD" Type="date" Mode="In" />
+        </Function>
+        <Function Name="ADD_NEW_TAKER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="TNAME" Type="varchar2" Mode="In" />
+          <Parameter Name="TBLOOD" Type="varchar2" Mode="In" />
+          <Parameter Name="TADDRESS" Type="varchar2" Mode="In" />
+          <Parameter Name="TCONTACT" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="ADD_NEW_TRANSFER_DETAILS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="BBID" Type="varchar2" Mode="In" />
+          <Parameter Name="DONORID" Type="number" Mode="In" />
+          <Parameter Name="TAKERID" Type="number" Mode="In" />
+          <Parameter Name="BLOODGROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="BLOODAMOUNT" Type="float" Mode="In" />
+          <Parameter Name="TRANSFERDATE" Type="date" Mode="In" />
+        </Function>
+        <Function Name="BLOOD_TRANSFERS_VOLUME_ON_DATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" ReturnType="float">
+          <Parameter Name="TRANSFER_DATE" Type="date" Mode="In" />
+        </Function>
+        <Function Name="DELETE_ACCOUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="ACCOUNTID" Type="number" Mode="In" />
+        </Function>
+        <Function Name="DELETE_BLOOD_BANK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="BB_ID" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="DELETE_DONOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="D_ID" Type="number" Mode="In" />
+        </Function>
+        <Function Name="DELETE_TAKER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="T_ID" Type="number" Mode="In" />
+        </Function>
+        <Function Name="DELETE_TRANSF_DET_BY_PARAMS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="BBID" Type="varchar2" Mode="In" />
+          <Parameter Name="DONORID" Type="number" Mode="In" />
+          <Parameter Name="TAKERID" Type="number" Mode="In" />
+        </Function>
+        <Function Name="DELETE_TRANSFER_DETAILS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="TRANSFERID" Type="number" Mode="In" />
+        </Function>
+        <Function Name="EXPORT_TAKERS_TO_XML" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="FIND_AVAIL_DONORS_BY_GR_ADDR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="CHECK_BLOOD_GROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="CHECK_DONOE_ADDRESS" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="FIND_DONORS_BY_BLOODGROUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="CHECK_BLOOD_GROUP" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="FIND_UNAVAIL_DONORS_BY_GR_ADDR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="CHECK_BLOOD_GROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="CHECK_DONOE_ADDRESS" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="GETACCOUNTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GETBLOOD_BANKS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GET_BLOOD_LEADER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="START_DATE" Type="date" Mode="In" />
+          <Parameter Name="END_DATE" Type="date" Mode="In" />
+        </Function>
+        <Function Name="GETDONOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GETDONORS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GETTAKERS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GETTRANSFER_DETAILS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="GETTRANSFER_DETAILS_FOR_CLIEN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="IMPORT_TAKERS_FROM_XML" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" />
+        <Function Name="NOTAL_NO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" ReturnType="number">
+          <Parameter Name="TRANSFER_DATE_IN" Type="date" Mode="In" />
+        </Function>
+        <Function Name="NUM_OF_TRANSF" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="TRANSFER_DATE_IN" Type="date" Mode="In" />
+        </Function>
+        <Function Name="TOTAL_BLOOD_TRANSFER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN" ReturnType="number">
+          <Parameter Name="P_BLOOD_GROUP" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="UPDATE_ACCOUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="ACCID" Type="number" Mode="In" />
+          <Parameter Name="ACCLOGIN" Type="varchar2" Mode="In" />
+          <Parameter Name="ACCPASSWORD" Type="nvarchar2" Mode="In" />
+        </Function>
+        <Function Name="UPDATE_BLOOD_BANK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="ID" Type="varchar2" Mode="In" />
+          <Parameter Name="BGROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="AMOUNT" Type="float" Mode="In" />
+        </Function>
+        <Function Name="UPDATE_DONOR_INFO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="D_ID" Type="number" Mode="In" />
+          <Parameter Name="DNAME" Type="varchar2" Mode="In" />
+          <Parameter Name="DADDRESS" Type="varchar2" Mode="In" />
+          <Parameter Name="DCONTACT" Type="varchar2" Mode="In" />
+          <Parameter Name="DLDD" Type="date" Mode="In" />
+        </Function>
+        <Function Name="UPDATE_TAKER_INFO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="T_ID" Type="number" Mode="In" />
+          <Parameter Name="TNAME" Type="varchar2" Mode="In" />
+          <Parameter Name="TADDRESS" Type="varchar2" Mode="In" />
+          <Parameter Name="TCONTACT" Type="varchar2" Mode="In" />
+        </Function>
+        <Function Name="UPDATE_TRANSFER_DETAILS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="TID" Type="number" Mode="In" />
+          <Parameter Name="BBID" Type="varchar2" Mode="In" />
+          <Parameter Name="DONORID" Type="number" Mode="In" />
+          <Parameter Name="TAKERID" Type="number" Mode="In" />
+          <Parameter Name="BLOODGROUP" Type="varchar2" Mode="In" />
+          <Parameter Name="BLOODAMOUNT" Type="float" Mode="In" />
+          <Parameter Name="TRANSFERDATE" Type="date" Mode="In" />
+        </Function>
+        <Function Name="VOLUME_OF_BLOOD_TRANSF_ON_DATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="BB_ADMIN">
+          <Parameter Name="SELECTED_DATE" Type="date" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="ACCOUNT" EntityType="Self.ACCOUNT" Schema="BB_ADMIN" store:Type="Tables" />
+          <EntitySet Name="BLOOD_BANK" EntityType="Self.BLOOD_BANK" Schema="BB_ADMIN" store:Type="Tables" />
+          <EntitySet Name="DONOR" EntityType="Self.DONOR" Schema="BB_ADMIN" store:Type="Tables" />
+          <EntitySet Name="TAKER" EntityType="Self.TAKER" Schema="BB_ADMIN" store:Type="Tables" />
+          <EntitySet Name="TRANSFER_DETAILS" EntityType="Self.TRANSFER_DETAILS" store:Type="Tables" store:Schema="BB_ADMIN">
+            <DefiningQuery>SELECT 
+"TRANSFER_DETAILS"."TRANSER_ID" AS "TRANSER_ID", 
+"TRANSFER_DETAILS"."BLOODBANK_ID" AS "BLOODBANK_ID", 
+"TRANSFER_DETAILS"."DONOR_ID" AS "DONOR_ID", 
+"TRANSFER_DETAILS"."TAKER_ID" AS "TAKER_ID", 
+"TRANSFER_DETAILS"."BLOOD_GROUP" AS "BLOOD_GROUP", 
+"TRANSFER_DETAILS"."BLOOD_AMOUNT" AS "BLOOD_AMOUNT", 
+"TRANSFER_DETAILS"."TRANSFER_DATE" AS "TRANSFER_DATE"
+FROM "BB_ADMIN"."TRANSFER_DETAILS" "TRANSFER_DETAILS"</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="SYS_C0010172" Association="Self.SYS_C0010172">
+            <End Role="BLOOD_BANK" EntitySet="BLOOD_BANK" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+          <AssociationSet Name="SYS_C0010173" Association="Self.SYS_C0010173">
+            <End Role="DONOR" EntitySet="DONOR" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+          <AssociationSet Name="SYS_C0010174" Association="Self.SYS_C0010174">
+            <End Role="TAKER" EntitySet="TAKER" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ACCOUNT">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="Decimal" Precision="38" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOGIN" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PASSWORD" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BLOOD_BANK">
+          <Key>
+            <PropertyRef Name="BLOODBANK_ID" />
+          </Key>
+          <Property Name="BLOODBANK_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BLOODBANK_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BLOOD_GROUP" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BLOOD_AMOUNT" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="BLOOD_STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CHECKING_DATE" Type="DateTime" />
+          <NavigationProperty Name="TRANSFER_DETAILS" Relationship="Self.SYS_C0010172" FromRole="BLOOD_BANK" ToRole="TRANSFER_DETAILS" />
+        </EntityType>
+        <EntityType Name="DONOR">
+          <Key>
+            <PropertyRef Name="DONOR_ID" />
+          </Key>
+          <Property Name="DONOR_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DONOR_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DONOR_BLOOD_GROUP" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DONOR_PHONE_NUMBER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DONOR_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LAST_DONATION_DATE" Type="DateTime" Nullable="false" />
+          <Property Name="DONOR_STATUS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TRANSFER_DETAILS" Relationship="Self.SYS_C0010173" FromRole="DONOR" ToRole="TRANSFER_DETAILS" />
+        </EntityType>
+        <EntityType Name="TAKER">
+          <Key>
+            <PropertyRef Name="TAKER_ID" />
+          </Key>
+          <Property Name="TAKER_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TAKER_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TAKER_BLOOD_GROUP" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TAKER_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TAKER_PHONE_NUMBER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TRANSFER_DETAILS" Relationship="Self.SYS_C0010174" FromRole="TAKER" ToRole="TRANSFER_DETAILS" />
+        </EntityType>
+        <EntityType Name="TRANSFER_DETAILS">
+          <Key>
+            <PropertyRef Name="TRANSER_ID" />
+          </Key>
+          <Property Name="TRANSER_ID" Type="Decimal" Precision="38" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BLOODBANK_ID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DONOR_ID" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="TAKER_ID" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="BLOOD_GROUP" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BLOOD_AMOUNT" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="TRANSFER_DATE" Type="DateTime" />
+          <NavigationProperty Name="BLOOD_BANK" Relationship="Self.SYS_C0010172" FromRole="TRANSFER_DETAILS" ToRole="BLOOD_BANK" />
+          <NavigationProperty Name="DONOR" Relationship="Self.SYS_C0010173" FromRole="TRANSFER_DETAILS" ToRole="DONOR" />
+          <NavigationProperty Name="TAKER" Relationship="Self.SYS_C0010174" FromRole="TRANSFER_DETAILS" ToRole="TAKER" />
+        </EntityType>
+        <Association Name="SYS_C0010172">
+          <End Role="BLOOD_BANK" Type="Self.BLOOD_BANK" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BLOOD_BANK">
+              <PropertyRef Name="BLOODBANK_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="BLOODBANK_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SYS_C0010173">
+          <End Role="DONOR" Type="Self.DONOR" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DONOR">
+              <PropertyRef Name="DONOR_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="DONOR_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SYS_C0010174">
+          <End Role="TAKER" Type="Self.TAKER" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TRANSFER_DETAILS" Type="Self.TRANSFER_DETAILS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TAKER">
+              <PropertyRef Name="TAKER_ID" />
+            </Principal>
+            <Dependent Role="TRANSFER_DETAILS">
+              <PropertyRef Name="TAKER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ACCOUNT" EntityType="Self.ACCOUNT" />
+          <EntitySet Name="BLOOD_BANK" EntityType="Self.BLOOD_BANK" />
+          <EntitySet Name="DONOR" EntityType="Self.DONOR" />
+          <EntitySet Name="TAKER" EntityType="Self.TAKER" />
+          <EntitySet Name="TRANSFER_DETAILS" EntityType="Self.TRANSFER_DETAILS" />
+          <AssociationSet Name="SYS_C0010172" Association="Self.SYS_C0010172">
+            <End Role="BLOOD_BANK" EntitySet="BLOOD_BANK" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+          <AssociationSet Name="SYS_C0010173" Association="Self.SYS_C0010173">
+            <End Role="DONOR" EntitySet="DONOR" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+          <AssociationSet Name="SYS_C0010174" Association="Self.SYS_C0010174">
+            <End Role="TAKER" EntitySet="TAKER" />
+            <End Role="TRANSFER_DETAILS" EntitySet="TRANSFER_DETAILS" />
+          </AssociationSet>
+          <FunctionImport Name="ADD_NEW_ACCOUNT">
+            <Parameter Name="P_LOGIN" Mode="In" Type="String" />
+            <Parameter Name="P_PASSWORD" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ADD_NEW_BLOOD_BANK">
+            <Parameter Name="BBID" Mode="In" Type="String" />
+            <Parameter Name="BBNAME" Mode="In" Type="String" />
+            <Parameter Name="BBBGROUP" Mode="In" Type="String" />
+            <Parameter Name="BBBAMOUNT" Mode="In" Type="Decimal" />
+            <Parameter Name="BBCHAECKINGD" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="ADD_NEW_DONOR">
+            <Parameter Name="DNAME" Mode="In" Type="String" />
+            <Parameter Name="DBLOOD" Mode="In" Type="String" />
+            <Parameter Name="DADDRESS" Mode="In" Type="String" />
+            <Parameter Name="DCONTACT" Mode="In" Type="String" />
+            <Parameter Name="DLDD" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="ADD_NEW_TAKER">
+            <Parameter Name="TNAME" Mode="In" Type="String" />
+            <Parameter Name="TBLOOD" Mode="In" Type="String" />
+            <Parameter Name="TADDRESS" Mode="In" Type="String" />
+            <Parameter Name="TCONTACT" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ADD_NEW_TRANSFER_DETAILS">
+            <Parameter Name="BBID" Mode="In" Type="String" />
+            <Parameter Name="DONORID" Mode="In" Type="Decimal" />
+            <Parameter Name="TAKERID" Mode="In" Type="Decimal" />
+            <Parameter Name="BLOODGROUP" Mode="In" Type="String" />
+            <Parameter Name="BLOODAMOUNT" Mode="In" Type="Decimal" />
+            <Parameter Name="TRANSFERDATE" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_ACCOUNT">
+          <Parameter Name="ACCOUNTID" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_BLOOD_BANK">
+          <Parameter Name="BB_ID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_DONOR">
+          <Parameter Name="D_ID" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_TAKER">
+          <Parameter Name="T_ID" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_TRANSF_DET_BY_PARAMS">
+            <Parameter Name="BBID" Mode="In" Type="String" />
+            <Parameter Name="DONORID" Mode="In" Type="Decimal" />
+            <Parameter Name="TAKERID" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="DELETE_TRANSFER_DETAILS">
+          <Parameter Name="TRANSFERID" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="FIND_AVAIL_DONORS_BY_GR_ADDR" ReturnType="Collection(Model.FIND_AVAIL_DONORS_BY_GR_ADDR_Result)">
+            <Parameter Name="CHECK_BLOOD_GROUP" Mode="In" Type="String" />
+            <Parameter Name="CHECK_DONOE_ADDRESS" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FIND_DONORS_BY_BLOODGROUP" ReturnType="Collection(Model.FIND_DONORS_BY_BLOODGROUP_Result)">
+          <Parameter Name="CHECK_BLOOD_GROUP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FIND_UNAVAIL_DONORS_BY_GR_ADDR" ReturnType="Collection(Model.FIND_UNAVAIL_DONORS_BY_GR_ADDR_Result)">
+            <Parameter Name="CHECK_BLOOD_GROUP" Mode="In" Type="String" />
+            <Parameter Name="CHECK_DONOE_ADDRESS" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GETACCOUNTS" ReturnType="Collection(Model.GETACCOUNTS_Result)" />
+          <FunctionImport Name="GETBLOOD_BANKS" ReturnType="Collection(Model.GETBLOOD_BANKS_Result)" />
+          <FunctionImport Name="GET_BLOOD_LEADER" ReturnType="Collection(Model.GET_BLOOD_LEADER_Result)">
+            <Parameter Name="START_DATE" Mode="In" Type="DateTime" />
+            <Parameter Name="END_DATE" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GETDONOR" />
+          <FunctionImport Name="GETDONORS" ReturnType="Collection(Model.GETDONORS_Result)" />
+          <FunctionImport Name="GETTAKERS" ReturnType="Collection(Model.GETTAKERS_Result)" />
+          <FunctionImport Name="GETTRANSFER_DETAILS" ReturnType="Collection(Model.GETTRANSFER_DETAILS_Result)" />
+          <FunctionImport Name="GETTRANSFER_DETAILS_FOR_CLIEN" />
+          <FunctionImport Name="UPDATE_ACCOUNT">
+            <Parameter Name="ACCID" Mode="In" Type="Decimal" />
+            <Parameter Name="ACCLOGIN" Mode="In" Type="String" />
+            <Parameter Name="ACCPASSWORD" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UPDATE_BLOOD_BANK">
+            <Parameter Name="ID" Mode="In" Type="String" />
+            <Parameter Name="BGROUP" Mode="In" Type="String" />
+            <Parameter Name="AMOUNT" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="UPDATE_DONOR_INFO">
+            <Parameter Name="D_ID" Mode="In" Type="Decimal" />
+            <Parameter Name="DNAME" Mode="In" Type="String" />
+            <Parameter Name="DADDRESS" Mode="In" Type="String" />
+            <Parameter Name="DCONTACT" Mode="In" Type="String" />
+            <Parameter Name="DLDD" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="UPDATE_TAKER_INFO">
+            <Parameter Name="T_ID" Mode="In" Type="Decimal" />
+            <Parameter Name="TNAME" Mode="In" Type="String" />
+            <Parameter Name="TADDRESS" Mode="In" Type="String" />
+            <Parameter Name="TCONTACT" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UPDATE_TRANSFER_DETAILS">
+            <Parameter Name="TID" Mode="In" Type="Decimal" />
+            <Parameter Name="BBID" Mode="In" Type="String" />
+            <Parameter Name="DONORID" Mode="In" Type="Decimal" />
+            <Parameter Name="TAKERID" Mode="In" Type="Decimal" />
+            <Parameter Name="BLOODGROUP" Mode="In" Type="String" />
+            <Parameter Name="BLOODAMOUNT" Mode="In" Type="Decimal" />
+            <Parameter Name="TRANSFERDATE" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="NUM_OF_TRANSF" ReturnType="Collection(Model.NUM_OF_TRANSF_Result)">
+          <Parameter Name="TRANSFER_DATE_IN" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="VOLUME_OF_BLOOD_TRANSF_ON_DATE" ReturnType="Collection(Model.VOLUME_OF_BLOOD_TRANSF_ON_DATE_Result)">
+          <Parameter Name="SELECTED_DATE" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="EXPORT_TAKERS_TO_XML" />
+          <FunctionImport Name="IMPORT_TAKERS_FROM_XML" />
+        </EntityContainer>
+        <ComplexType Name="GETDONORS_Result">
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="false" />
+          <Property Type="String" Name="DONOR_NAME" Nullable="false" />
+          <Property Type="String" Name="DONOR_BLOOD_GROUP" Nullable="false" />
+          <Property Type="String" Name="DONOR_PHONE_NUMBER" Nullable="true" />
+          <Property Type="String" Name="DONOR_ADDRESS" Nullable="false" />
+          <Property Type="DateTime" Name="LAST_DONATION_DATE" Nullable="false" />
+          <Property Type="String" Name="DONOR_STATUS" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GETTAKERS_Result">
+          <Property Type="Decimal" Name="TAKER_ID" Nullable="false" />
+          <Property Type="String" Name="TAKER_NAME" Nullable="false" />
+          <Property Type="String" Name="TAKER_BLOOD_GROUP" Nullable="false" />
+          <Property Type="String" Name="TAKER_ADDRESS" Nullable="false" />
+          <Property Type="String" Name="TAKER_PHONE_NUMBER" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GETBLOOD_BANKS_Result">
+          <Property Type="String" Name="BLOODBANK_ID" Nullable="false" />
+          <Property Type="String" Name="BLOODBANK_NAME" Nullable="false" />
+          <Property Type="String" Name="BLOOD_GROUP" Nullable="false" />
+          <Property Type="Decimal" Name="BLOOD_AMOUNT" Nullable="true" />
+          <Property Type="String" Name="BLOOD_STATUS" Nullable="true" />
+          <Property Type="DateTime" Name="CHECKING_DATE" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GETTRANSFER_DETAILS_Result">
+          <Property Type="Decimal" Name="TRANSER_ID" Nullable="false" />
+          <Property Type="String" Name="BLOODBANK_ID" Nullable="true" />
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="true" />
+          <Property Type="Decimal" Name="TAKER_ID" Nullable="true" />
+          <Property Type="String" Name="BLOOD_GROUP" Nullable="true" />
+          <Property Type="Decimal" Name="BLOOD_AMOUNT" Nullable="true" />
+          <Property Type="DateTime" Name="TRANSFER_DATE" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FIND_DONORS_BY_BLOODGROUP_Result">
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="false" />
+          <Property Type="String" Name="DONOR_NAME" Nullable="false" />
+          <Property Type="String" Name="DONOR_PHONE_NUMBER" Nullable="true" />
+          <Property Type="String" Name="DONOR_ADDRESS" Nullable="false" />
+          <Property Type="DateTime" Name="LAST_DONATION_DATE" Nullable="false" />
+          <Property Type="String" Name="DONOR_STATUS" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FIND_AVAIL_DONORS_BY_GR_ADDR_Result">
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="false" />
+          <Property Type="String" Name="DONOR_NAME" Nullable="false" />
+          <Property Type="String" Name="DONOR_PHONE_NUMBER" Nullable="true" />
+          <Property Type="String" Name="DONOR_ADDRESS" Nullable="false" />
+          <Property Type="String" Name="DONOR_STATUS" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FIND_UNAVAIL_DONORS_BY_GR_ADDR_Result">
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="false" />
+          <Property Type="String" Name="DONOR_NAME" Nullable="false" />
+          <Property Type="String" Name="DONOR_PHONE_NUMBER" Nullable="true" />
+          <Property Type="String" Name="DONOR_ADDRESS" Nullable="false" />
+          <Property Type="String" Name="DONOR_STATUS" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GET_BLOOD_LEADER_Result">
+          <Property Type="Decimal" Name="DONOR_ID" Nullable="false" />
+          <Property Type="String" Name="DONOR_NAME" Nullable="false" />
+          <Property Type="String" Name="DONOR_PHONE_NUMBER" Nullable="true" />
+          <Property Type="String" Name="DONOR_ADDRESS" Nullable="false" />
+          <Property Type="Decimal" Name="TOTAL_BLOOD_AMOUNT" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="VOLUME_OF_BLOOD_TRANSF_ON_DATE_Result">
+          <Property Type="Decimal" Name="TOTAL_VOLUME_ON_DATE" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="NUM_OF_TRANSF_Result">
+          <Property Type="Decimal" Name="NUMBER_OF_TRANSF" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GETACCOUNTS_Result">
+          <Property Type="Decimal" Name="USERID" Nullable="false" />
+          <Property Type="String" Name="LOGIN" Nullable="false" />
+          <Property Type="String" Name="PASSWORD" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="ACCOUNT">
+            <EntityTypeMapping TypeName="Model.ACCOUNT">
+              <MappingFragment StoreEntitySet="ACCOUNT">
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="LOGIN" ColumnName="LOGIN" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BLOOD_BANK">
+            <EntityTypeMapping TypeName="Model.BLOOD_BANK">
+              <MappingFragment StoreEntitySet="BLOOD_BANK">
+                <ScalarProperty Name="BLOODBANK_ID" ColumnName="BLOODBANK_ID" />
+                <ScalarProperty Name="BLOODBANK_NAME" ColumnName="BLOODBANK_NAME" />
+                <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+                <ScalarProperty Name="BLOOD_AMOUNT" ColumnName="BLOOD_AMOUNT" />
+                <ScalarProperty Name="BLOOD_STATUS" ColumnName="BLOOD_STATUS" />
+                <ScalarProperty Name="CHECKING_DATE" ColumnName="CHECKING_DATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DONOR">
+            <EntityTypeMapping TypeName="Model.DONOR">
+              <MappingFragment StoreEntitySet="DONOR">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_BLOOD_GROUP" ColumnName="DONOR_BLOOD_GROUP" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="LAST_DONATION_DATE" ColumnName="LAST_DONATION_DATE" />
+                <ScalarProperty Name="DONOR_STATUS" ColumnName="DONOR_STATUS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TAKER">
+            <EntityTypeMapping TypeName="Model.TAKER">
+              <MappingFragment StoreEntitySet="TAKER">
+                <ScalarProperty Name="TAKER_ID" ColumnName="TAKER_ID" />
+                <ScalarProperty Name="TAKER_NAME" ColumnName="TAKER_NAME" />
+                <ScalarProperty Name="TAKER_BLOOD_GROUP" ColumnName="TAKER_BLOOD_GROUP" />
+                <ScalarProperty Name="TAKER_ADDRESS" ColumnName="TAKER_ADDRESS" />
+                <ScalarProperty Name="TAKER_PHONE_NUMBER" ColumnName="TAKER_PHONE_NUMBER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRANSFER_DETAILS">
+            <EntityTypeMapping TypeName="Model.TRANSFER_DETAILS">
+              <MappingFragment StoreEntitySet="TRANSFER_DETAILS">
+                <ScalarProperty Name="TRANSER_ID" ColumnName="TRANSER_ID" />
+                <ScalarProperty Name="BLOODBANK_ID" ColumnName="BLOODBANK_ID" />
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="TAKER_ID" ColumnName="TAKER_ID" />
+                <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+                <ScalarProperty Name="BLOOD_AMOUNT" ColumnName="BLOOD_AMOUNT" />
+                <ScalarProperty Name="TRANSFER_DATE" ColumnName="TRANSFER_DATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ADD_NEW_ACCOUNT" FunctionName="Хранилище Model.ADD_NEW_ACCOUNT" />
+          <FunctionImportMapping FunctionImportName="ADD_NEW_BLOOD_BANK" FunctionName="Хранилище Model.ADD_NEW_BLOOD_BANK" />
+          <FunctionImportMapping FunctionImportName="ADD_NEW_DONOR" FunctionName="Хранилище Model.ADD_NEW_DONOR" />
+          <FunctionImportMapping FunctionImportName="ADD_NEW_TAKER" FunctionName="Хранилище Model.ADD_NEW_TAKER" />
+          <FunctionImportMapping FunctionImportName="ADD_NEW_TRANSFER_DETAILS" FunctionName="Хранилище Model.ADD_NEW_TRANSFER_DETAILS" />
+          <FunctionImportMapping FunctionImportName="DELETE_ACCOUNT" FunctionName="Хранилище Model.DELETE_ACCOUNT" />
+          <FunctionImportMapping FunctionImportName="DELETE_BLOOD_BANK" FunctionName="Хранилище Model.DELETE_BLOOD_BANK" />
+          <FunctionImportMapping FunctionImportName="DELETE_DONOR" FunctionName="Хранилище Model.DELETE_DONOR" />
+          <FunctionImportMapping FunctionImportName="DELETE_TAKER" FunctionName="Хранилище Model.DELETE_TAKER" />
+          <FunctionImportMapping FunctionImportName="DELETE_TRANSF_DET_BY_PARAMS" FunctionName="Хранилище Model.DELETE_TRANSF_DET_BY_PARAMS" />
+          <FunctionImportMapping FunctionImportName="DELETE_TRANSFER_DETAILS" FunctionName="Хранилище Model.DELETE_TRANSFER_DETAILS" />
+          <FunctionImportMapping FunctionImportName="FIND_AVAIL_DONORS_BY_GR_ADDR" FunctionName="Хранилище Model.FIND_AVAIL_DONORS_BY_GR_ADDR" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.FIND_AVAIL_DONORS_BY_GR_ADDR_Result">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="DONOR_STATUS" ColumnName="DONOR_STATUS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FIND_DONORS_BY_BLOODGROUP" FunctionName="Хранилище Model.FIND_DONORS_BY_BLOODGROUP" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.FIND_DONORS_BY_BLOODGROUP_Result">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="LAST_DONATION_DATE" ColumnName="LAST_DONATION_DATE" />
+                <ScalarProperty Name="DONOR_STATUS" ColumnName="DONOR_STATUS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FIND_UNAVAIL_DONORS_BY_GR_ADDR" FunctionName="Хранилище Model.FIND_UNAVAIL_DONORS_BY_GR_ADDR" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.FIND_UNAVAIL_DONORS_BY_GR_ADDR_Result">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="DONOR_STATUS" ColumnName="DONOR_STATUS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETACCOUNTS" FunctionName="Хранилище Model.GETACCOUNTS" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GETACCOUNTS_Result">
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="LOGIN" ColumnName="LOGIN" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETBLOOD_BANKS" FunctionName="Хранилище Model.GETBLOOD_BANKS" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GETBLOOD_BANKS_Result">
+                <ScalarProperty Name="BLOODBANK_ID" ColumnName="BLOODBANK_ID" />
+                <ScalarProperty Name="BLOODBANK_NAME" ColumnName="BLOODBANK_NAME" />
+                <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+                <ScalarProperty Name="BLOOD_AMOUNT" ColumnName="BLOOD_AMOUNT" />
+                <ScalarProperty Name="BLOOD_STATUS" ColumnName="BLOOD_STATUS" />
+                <ScalarProperty Name="CHECKING_DATE" ColumnName="CHECKING_DATE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GET_BLOOD_LEADER" FunctionName="Хранилище Model.GET_BLOOD_LEADER" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GET_BLOOD_LEADER_Result">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="TOTAL_BLOOD_AMOUNT" ColumnName="TOTAL_BLOOD_AMOUNT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETDONOR" FunctionName="Хранилище Model.GETDONOR" />
+          <FunctionImportMapping FunctionImportName="GETDONORS" FunctionName="Хранилище Model.GETDONORS" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GETDONORS_Result">
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="DONOR_NAME" ColumnName="DONOR_NAME" />
+                <ScalarProperty Name="DONOR_BLOOD_GROUP" ColumnName="DONOR_BLOOD_GROUP" />
+                <ScalarProperty Name="DONOR_PHONE_NUMBER" ColumnName="DONOR_PHONE_NUMBER" />
+                <ScalarProperty Name="DONOR_ADDRESS" ColumnName="DONOR_ADDRESS" />
+                <ScalarProperty Name="LAST_DONATION_DATE" ColumnName="LAST_DONATION_DATE" />
+                <ScalarProperty Name="DONOR_STATUS" ColumnName="DONOR_STATUS" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETTAKERS" FunctionName="Хранилище Model.GETTAKERS" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GETTAKERS_Result">
+                <ScalarProperty Name="TAKER_ID" ColumnName="TAKER_ID" />
+                <ScalarProperty Name="TAKER_NAME" ColumnName="TAKER_NAME" />
+                <ScalarProperty Name="TAKER_BLOOD_GROUP" ColumnName="TAKER_BLOOD_GROUP" />
+                <ScalarProperty Name="TAKER_ADDRESS" ColumnName="TAKER_ADDRESS" />
+                <ScalarProperty Name="TAKER_PHONE_NUMBER" ColumnName="TAKER_PHONE_NUMBER" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETTRANSFER_DETAILS" FunctionName="Хранилище Model.GETTRANSFER_DETAILS" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.GETTRANSFER_DETAILS_Result">
+                <ScalarProperty Name="TRANSER_ID" ColumnName="TRANSER_ID" />
+                <ScalarProperty Name="BLOODBANK_ID" ColumnName="BLOODBANK_ID" />
+                <ScalarProperty Name="DONOR_ID" ColumnName="DONOR_ID" />
+                <ScalarProperty Name="TAKER_ID" ColumnName="TAKER_ID" />
+                <ScalarProperty Name="BLOOD_GROUP" ColumnName="BLOOD_GROUP" />
+                <ScalarProperty Name="BLOOD_AMOUNT" ColumnName="BLOOD_AMOUNT" />
+                <ScalarProperty Name="TRANSFER_DATE" ColumnName="TRANSFER_DATE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GETTRANSFER_DETAILS_FOR_CLIEN" FunctionName="Хранилище Model.GETTRANSFER_DETAILS_FOR_CLIEN" />
+          <FunctionImportMapping FunctionImportName="UPDATE_ACCOUNT" FunctionName="Хранилище Model.UPDATE_ACCOUNT" />
+          <FunctionImportMapping FunctionImportName="UPDATE_BLOOD_BANK" FunctionName="Хранилище Model.UPDATE_BLOOD_BANK" />
+          <FunctionImportMapping FunctionImportName="UPDATE_DONOR_INFO" FunctionName="Хранилище Model.UPDATE_DONOR_INFO" />
+          <FunctionImportMapping FunctionImportName="UPDATE_TAKER_INFO" FunctionName="Хранилище Model.UPDATE_TAKER_INFO" />
+          <FunctionImportMapping FunctionImportName="UPDATE_TRANSFER_DETAILS" FunctionName="Хранилище Model.UPDATE_TRANSFER_DETAILS" />
+          <FunctionImportMapping FunctionImportName="NUM_OF_TRANSF" FunctionName="Хранилище Model.NUM_OF_TRANSF" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.NUM_OF_TRANSF_Result">
+                <ScalarProperty Name="NUMBER_OF_TRANSF" ColumnName="NUMBER_OF_TRANSF" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="VOLUME_OF_BLOOD_TRANSF_ON_DATE" FunctionName="Хранилище Model.VOLUME_OF_BLOOD_TRANSF_ON_DATE" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.VOLUME_OF_BLOOD_TRANSF_ON_DATE_Result">
+                <ScalarProperty Name="TOTAL_VOLUME_ON_DATE" ColumnName="TOTAL_VOLUME_ON_DATE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EXPORT_TAKERS_TO_XML" FunctionName="Хранилище Model.EXPORT_TAKERS_TO_XML" />
+          <FunctionImportMapping FunctionImportName="IMPORT_TAKERS_FROM_XML" FunctionName="Хранилище Model.IMPORT_TAKERS_FROM_XML" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

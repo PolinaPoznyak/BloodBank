@@ -1,0 +1,1376 @@
+﻿<Window
+    x:Class="CourseProject.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CourseProject"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Combination of route permutation algorithm and RSA"
+    Width="1500"
+    Height="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    Icon="/Images/drop.png"
+    Loaded="Window_Loaded"
+    ResizeMode="NoResize"
+    ScrollViewer.VerticalScrollBarVisibility="Disabled"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Grid Margin="0" Background="White">
+        <materialDesign:DialogHost BorderBrush="{DynamicResource MaterialDesignDivider}">
+            <materialDesign:DialogHost.DialogContent>
+                <Grid
+                    Width="300"
+                    Height="240"
+                    HorizontalAlignment="Center">
+                    <StackPanel Margin="15" Orientation="Vertical">
+                        <materialDesign:PackIcon
+                            Width="50"
+                            Height="50"
+                            HorizontalAlignment="Center"
+                            Foreground="{StaticResource PrimaryHueMidBrush}"
+                            Kind="InfoBox" />
+                        <TextBlock
+                            Width="200"
+                            Margin="15,5"
+                            HorizontalAlignment="Center"
+                            Foreground="Gray"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap">
+                            Course project completed by a student
+                        </TextBlock>
+                        <TextBlock
+                            Width="200"
+                            Margin="15,5"
+                            HorizontalAlignment="Center"
+                            Foreground="Gray"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap">
+                            3 courses of the 1st group of specialty ISIT
+                        </TextBlock>
+                        <TextBlock
+                            Width="200"
+                            Margin="15,5"
+                            HorizontalAlignment="Center"
+                            Foreground="Gray"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap">
+                            Poznyak Polina Pavlovna
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel
+                        Margin="15"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Orientation="Horizontal">
+                        <Button
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            Style="{DynamicResource MaterialDesignFlatButton}">
+                            Закрыть
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+
+            <Grid>
+                <Grid
+                    Width="1500"
+                    Height="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Background="Red"
+                    MouseDown="Grid_MouseDown">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Column="0"
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,5,0"
+                        Padding="0"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="Red"
+                        BorderThickness="0"
+                        Click="Exit_btn_Click"
+                        Cursor="Hand"
+                        Foreground="White"
+                        Style="{x:Null}">
+                        <materialDesign:PackIcon
+                            Width="25"
+                            Height="25"
+                            Kind="ExitToApp" />
+                    </Button>
+                    <Button
+                        Grid.Column="0"
+                        Width="30"
+                        Height="30"
+                        Margin="35,0,0,0"
+                        Padding="0"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="Red"
+                        BorderThickness="0"
+                        Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                        Cursor="Hand"
+                        Foreground="White"
+                        Style="{x:Null}">
+                        <materialDesign:PackIcon
+                            Width="25"
+                            Height="25"
+                            Kind="InfoBox" />
+                    </Button>
+                    <Button
+                        Grid.Column="0"
+                        Width="30"
+                        Height="30"
+                        Margin="70,0,0,0"
+                        Padding="0"
+                        HorizontalAlignment="Left"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="Red"
+                        BorderThickness="0"
+                        Click="RefreshDBInfoClick"
+                        Cursor="Hand"
+                        Foreground="White"
+                        Style="{x:Null}">
+                        <materialDesign:PackIcon
+                            Width="25"
+                            Height="25"
+                            Kind="Refresh" />
+                    </Button>
+                    <Button
+                        Grid.Column="2"
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,35,0"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Bottom"
+                        Background="Red"
+                        BorderThickness="0"
+                        Click="Minimise_Button_Click"
+                        Cursor="Hand"
+                        Foreground="White"
+                        Style="{x:Null}">
+                        <materialDesign:PackIcon
+                            Width="25"
+                            Height="25"
+                            Kind="WindowMinimize" />
+                    </Button>
+                    <Button
+                        Grid.Column="2"
+                        Width="30"
+                        Height="30"
+                        Padding="0"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="Red"
+                        BorderThickness="0"
+                        Click="Close_Button_Click"
+                        Cursor="Hand"
+                        Foreground="White"
+                        Style="{x:Null}">
+                        <materialDesign:PackIcon
+                            Width="25"
+                            Height="25"
+                            Kind="CloseCircleOutline" />
+                    </Button>
+                </Grid>
+                <TabControl Margin="0,30,0,0">
+                    <TabItem Header="Donor">
+                        <ScrollViewer>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30*" />
+                                    <ColumnDefinition Width="70*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40*" />
+                                        <ColumnDefinition Width="60*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Donor name" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Donor blood group" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Donor phone number" />
+                                    <Label
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Donor address" />
+                                    <Label
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Last donation date" />
+                                    <TextBox
+                                        x:Name="donor_name"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <ComboBox
+                                        x:Name="donor_blood_group"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="240">
+                                        <TextBlock>A+</TextBlock>
+                                        <TextBlock>A-</TextBlock>
+                                        <TextBlock>B+</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>AB+</TextBlock>
+                                        <TextBlock>AB-</TextBlock>
+                                        <TextBlock>O+</TextBlock>
+                                        <TextBlock>O-</TextBlock>
+                                    </ComboBox>
+                                    <TextBox
+                                        x:Name="donor_phone_number"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        x:Name="donor_address"
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <DatePicker
+                                        x:Name="last_donation_date"
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        SelectedDateFormat="Long" />
+                                    <Grid
+                                        Grid.Row="5"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Button
+                                            x:Name="add_donor_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Add_donor_btn_Click"
+                                            Content="Add donor" />
+                                        <Button
+                                            x:Name="update_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="update_btn_Click"
+                                            Content="Update info" />
+                                        <Button
+                                            x:Name="delete_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="delete_btn_Click"
+                                            Content="Delete donor" />
+                                        <Button
+                                            x:Name="reset_donor_info_btn"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Reset_donor_info_btn_Click"
+                                            Content="Reset"
+                                            Cursor="Hand" />
+                                    </Grid>
+                                </Grid>
+                                <ScrollViewer Grid.Column="1">
+                                    <DataGrid
+                                        x:Name="DGDonors"
+                                        Width="999"
+                                        Height="704"
+                                        BorderThickness="2"
+                                        ColumnWidth="*"
+                                        IsReadOnly="True"
+                                        SelectedItem="{Binding SelectedItemProperty}"
+                                        SelectionChanged="DonorDataGrid_SelectionChanged" />
+                                </ScrollViewer>
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="Tacker">
+                        <ScrollViewer>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30*" />
+                                    <ColumnDefinition Width="70*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40*" />
+                                        <ColumnDefinition Width="60*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Taker name" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Taker blood group" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Taker phone number" />
+                                    <Label
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Taker address" />
+                                    <TextBox
+                                        x:Name="taker_name"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <ComboBox
+                                        x:Name="taker_blood_group"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="240">
+                                        <TextBlock>A+</TextBlock>
+                                        <TextBlock>A-</TextBlock>
+                                        <TextBlock>B+</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>AB+</TextBlock>
+                                        <TextBlock>AB-</TextBlock>
+                                        <TextBlock>O+</TextBlock>
+                                        <TextBlock>O-</TextBlock>
+                                    </ComboBox>
+                                    <TextBox
+                                        x:Name="taker_phone_number"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        x:Name="taker_address"
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <Grid
+                                        Grid.Row="5"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Button
+                                            x:Name="Add_taker_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Add_taker_btn_Click"
+                                            Content="Add taker" />
+                                        <Button
+                                            x:Name="Update_taker_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Update_taker_btn_Click"
+                                            Content="Update info" />
+                                        <Button
+                                            x:Name="Delete_taker_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Delete_taker_btn_Click"
+                                            Content="Delete taker"
+                                            Cursor="Hand" />
+                                        <Button
+                                            x:Name="Reset_taker_btn"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Reset_taker_btn_Click"
+                                            Content="Reset"
+                                            Cursor="Hand" />
+                                    </Grid>
+                                </Grid>
+                                <ScrollViewer Grid.Column="1">
+                                    <DataGrid
+                                        x:Name="DGTakers"
+                                        Width="999"
+                                        Height="704"
+                                        BorderThickness="2"
+                                        ColumnWidth="*"
+                                        IsReadOnly="True"
+                                        SelectedItem="{Binding SelectedItemProperty}"
+                                        SelectionChanged="TakerDataGrid_SelectionChanged" />
+                                </ScrollViewer>
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="Blood Bank">
+                        <ScrollViewer>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30*" />
+                                    <ColumnDefinition Width="70*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40*" />
+                                        <ColumnDefinition Width="60*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="100" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood Bank ID" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood Bank name" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood group" />
+                                    <Label
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood amount" />
+                                    <Label
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Checking date" />
+                                    <TextBox
+                                        x:Name="BloodBank_id"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        x:Name="BloodBank_name"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <ComboBox
+                                        x:Name="BloodBank_blood_group"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Width="240">
+                                        <TextBlock>A+</TextBlock>
+                                        <TextBlock>A-</TextBlock>
+                                        <TextBlock>B+</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>AB+</TextBlock>
+                                        <TextBlock>AB-</TextBlock>
+                                        <TextBlock>O+</TextBlock>
+                                        <TextBlock>O-</TextBlock>
+                                    </ComboBox>
+                                    <TextBox
+                                        x:Name="BloodBank_amount"
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <DatePicker
+                                        x:Name="BloodBank_checking_date"
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        SelectedDateFormat="Long" />
+                                    <Grid
+                                        Grid.Row="5"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Button
+                                            x:Name="Add_BloodBank_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Add_BloodBank_btn_Click"
+                                            Content="Add" />
+                                        <Button
+                                            x:Name="Update_BloodBank_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Update_BloodBank_btn_Click"
+                                            Content="Uodate" />
+                                        <Button
+                                            x:Name="Delete_BloodBank_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Delete_BloodBank_btn_Click"
+                                            Content="Delete" />
+                                        <Button
+                                            x:Name="Reset_BloodBank_btn"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Reset_BloodBank_btn_Click"
+                                            Content="Reset"
+                                            Cursor="Hand" />
+                                    </Grid>
+                                </Grid>
+                                <ScrollViewer Grid.Column="1">
+                                    <DataGrid
+                                        x:Name="DGBloodBank"
+                                        Width="999"
+                                        Height="704"
+                                        BorderThickness="2"
+                                        ColumnWidth="*"
+                                        IsReadOnly="True"
+                                        SelectedItem="{Binding SelectedItemProperty}"
+                                        SelectionChanged="DGBloodBank_SelectionChanged" />
+                                </ScrollViewer>
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="Transfer Details">
+                        <ScrollViewer>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30*" />
+                                    <ColumnDefinition Width="70*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40*" />
+                                        <ColumnDefinition Width="60*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="85" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood Bank ID" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Donor ID" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Taker ID" />
+                                    <Label
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood groop" />
+                                    <Label
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Blood amount" />
+                                    <Label
+                                        Grid.Row="5"
+                                        Grid.Column="0"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Content="Transfer date" />
+                                    <TextBox
+                                        x:Name="TransferDetails_bb_id"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        x:Name="TransferDetails_donor_id"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <TextBox
+                                        x:Name="TransferDetails_taker_id"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <ComboBox
+                                        x:Name="TransferDetails_blood_group"
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Width="240">
+                                        <TextBlock>A+</TextBlock>
+                                        <TextBlock>A-</TextBlock>
+                                        <TextBlock>B+</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>B-</TextBlock>
+                                        <TextBlock>AB+</TextBlock>
+                                        <TextBlock>AB-</TextBlock>
+                                        <TextBlock>O+</TextBlock>
+                                        <TextBlock>O-</TextBlock>
+                                    </ComboBox>
+                                    <TextBox
+                                        x:Name="TransferDetails_amount"
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                                    <DatePicker
+                                        x:Name="TransferDetails_date"
+                                        Grid.Row="5"
+                                        Grid.Column="1"
+                                        Width="240"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        SelectedDateFormat="Long" />
+                                    <Grid
+                                        Grid.Row="6"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Button
+                                            x:Name="Add_TransferDetails_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Add_TransferDetails_btn_Click"
+                                            Content="Add" />
+                                        <Button
+                                            x:Name="Update_TransferDetails_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Update_TransferDetails_btn_Click"
+                                            Content="Update" />
+                                        <Button
+                                            x:Name="Delete_TransferDetails_btn"
+                                            Grid.Row="0"
+                                            Grid.Column="2"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Delete_TransferDetails_btn_Click"
+                                            Content="Delete"
+                                            Cursor="Hand" />
+                                        <Button
+                                            x:Name="Reset_TransferDetails_btn"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Width="110"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="Reset_TransferDetails_btn_Click"
+                                            Content="Reset"
+                                            Cursor="Hand" />
+                                    </Grid>
+                                </Grid>
+                                <ScrollViewer Grid.Column="1">
+                                    <DataGrid
+                                        x:Name="DGTransferDetails"
+                                        Width="999"
+                                        Height="704"
+                                        BorderThickness="2"
+                                        ColumnWidth="*"
+                                        IsReadOnly="True"
+                                        SelectedItem="{Binding SelectedItemProperty}"
+                                        SelectionChanged="DGTransferDetails_SelectionChanged" />
+                                </ScrollViewer>
+                            </Grid>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="Donor Finder">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="90" />
+                                <RowDefinition Height="90" />
+                                <RowDefinition Height="90" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="Get donors by parameters"
+                                FontSize="25" />
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Content="Donors by blood group: " />
+
+                                <ComboBox
+                                    x:Name="cb_donor_by_group"
+                                    Grid.Column="1"
+                                    Grid.ColumnSpan="2"
+                                    Width="240"
+                                    materialDesign:HintAssist.Hint="Blood group"
+                                    materialDesign:HintAssist.IsFloating="True">
+                                    <TextBlock>A+</TextBlock>
+                                    <TextBlock>A-</TextBlock>
+                                    <TextBlock>B+</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>AB+</TextBlock>
+                                    <TextBlock>AB-</TextBlock>
+                                    <TextBlock>O+</TextBlock>
+                                    <TextBlock>O-</TextBlock>
+                                </ComboBox>
+
+                                <Button
+                                    x:Name="search_donor_by_group"
+                                    Grid.Column="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Click="search_donor_by_group_Click"
+                                    Content="Search" />
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Content="Available donors by blood group: " />
+
+                                <ComboBox
+                                    x:Name="cb_avdonor_by_group_and_addr"
+                                    Grid.Column="1"
+                                    Width="240"
+                                    materialDesign:HintAssist.Hint="Blood group"
+                                    materialDesign:HintAssist.IsFloating="True">
+                                    <TextBlock>A+</TextBlock>
+                                    <TextBlock>A-</TextBlock>
+                                    <TextBlock>B+</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>AB+</TextBlock>
+                                    <TextBlock>AB-</TextBlock>
+                                    <TextBlock>O+</TextBlock>
+                                    <TextBlock>O-</TextBlock>
+                                </ComboBox>
+
+                                <TextBox
+                                    x:Name="tb_avdonor_by_group_and_addr"
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Width="240"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Address"
+                                    materialDesign:HintAssist.IsFloating="True" />
+
+                                <Button
+                                    x:Name="search_avdonor_by_group_and_addr"
+                                    Grid.Column="3"
+                                    Margin="0,0,300,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Click="search_avdonor_by_group_and_addr_Click"
+                                    Content="Search" />
+                            </Grid>
+
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Content="Not Available donors by blood group: " />
+
+                                <ComboBox
+                                    x:Name="cb_unavdonor_by_group_and_addr"
+                                    Grid.Column="1"
+                                    Width="240"
+                                    materialDesign:HintAssist.Hint="Blood group"
+                                    materialDesign:HintAssist.IsFloating="True">
+                                    <TextBlock>A+</TextBlock>
+                                    <TextBlock>A-</TextBlock>
+                                    <TextBlock>B+</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>B-</TextBlock>
+                                    <TextBlock>AB+</TextBlock>
+                                    <TextBlock>AB-</TextBlock>
+                                    <TextBlock>O+</TextBlock>
+                                    <TextBlock>O-</TextBlock>
+                                </ComboBox>
+
+                                <TextBox
+                                    x:Name="tb_unavdonor_by_group_and_addr"
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Width="240"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    materialDesign:HintAssist.Hint="Address"
+                                    materialDesign:HintAssist.IsFloating="True" />
+
+                                <Button
+                                    x:Name="search_unavdonor_by_group_and_addr"
+                                    Grid.Column="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Click="search_unavdonor_by_group_and_addr_Click"
+                                    Content="Search" />
+                            </Grid>
+
+                            <ScrollViewer Grid.Row="4" Margin="0,0,0,25">
+                                <ListView
+                                    x:Name="DGGetDonors"
+                                    Width="999"
+                                    Height="704"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    BorderThickness="2">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_id}">Donor Id</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_name}">Donor Name</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_blood_group}">Donor group</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_phone_number}">Donor phone number</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_address}">Donor addredd</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=last_donation_date}">Last donation date</GridViewColumn>
+                                            <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Path=donor_status}">Donor status</GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Statistics">
+                        <ScrollViewer Background="White">
+                            <StackPanel>
+                                <Expander Header="💧 Determining the leader among donors over a period of time">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="100" />
+                                            <RowDefinition Height="90" />
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Label
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="We will determine the leader among donors within a certain period of time"
+                                            FontSize="25" />
+
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Content="Interval start date: "
+                                                FontWeight="Bold" />
+                                            <Label
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Content="Interval end date: "
+                                                FontWeight="Bold" />
+
+                                            <DatePicker
+                                                x:Name="DP_Find_Leader_Start"
+                                                Grid.Column="1"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                materialDesign:HintAssist.Hint="Start date"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                SelectedDateFormat="Long" />
+                                            <DatePicker
+                                                x:Name="DP_Find_Leader_End"
+                                                Grid.Column="3"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                materialDesign:HintAssist.Hint="End date"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                SelectedDateFormat="Long" />
+
+                                            <Button
+                                                x:Name="Get_leader_btn"
+                                                Grid.Column="4"
+                                                Margin="100,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Click="Get_leader_btn_Click"
+                                                Content="Search" />
+                                        </Grid>
+
+                                        <Label
+                                            x:Name="Leader_result_row_1"
+                                            Grid.Row="2"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="Donor who donated the most blood in a given period: "
+                                            FontSize="20"
+                                            Visibility="Hidden" />
+
+                                        <Grid
+                                            x:Name="Leader_result_row_2"
+                                            Grid.Row="3"
+                                            Visibility="Hidden">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="Donor ID: "
+                                                FontWeight="ExtraBlack" />
+                                            <Label
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="Donor name: "
+                                                FontWeight="ExtraBlack" />
+                                            <Label
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="Donor phone number: "
+                                                FontWeight="ExtraBlack" />
+                                            <Label
+                                                Grid.Column="3"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="Donor address: "
+                                                FontWeight="ExtraBlack" />
+                                            <Label
+                                                Grid.Column="4"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="Total volume of donated blood: "
+                                                FontWeight="ExtraBlack" />
+                                        </Grid>
+
+                                        <Grid
+                                            x:Name="Leader_result_row_3"
+                                            Grid.Row="4"
+                                            Visibility="Hidden">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBox
+                                                x:Name="Leader_Id"
+                                                Grid.Column="0"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                TextAlignment="Center" />
+                                            <TextBox
+                                                x:Name="Leader_Name"
+                                                Grid.Column="1"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                TextAlignment="Center" />
+                                            <TextBox
+                                                x:Name="Leader_phone"
+                                                Grid.Column="2"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                TextAlignment="Center" />
+                                            <TextBox
+                                                x:Name="Leader_address"
+                                                Grid.Column="3"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                TextAlignment="Center" />
+                                            <TextBox
+                                                x:Name="Leader_amount"
+                                                Grid.Column="4"
+                                                Width="240"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                TextAlignment="Center" />
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                                <Expander Header="💧 Get the number of blood transfer for a particular date">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="50" />
+                                        </Grid.RowDefinitions>
+
+                                        <Label
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="Select a date to find out the number of blood transfers carried out on a given date"
+                                            FontSize="20" />
+
+                                        <Grid Grid.Row="1" Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <DatePicker
+                                                x:Name="DP_Get_Num_Of_Transf"
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Width="240"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                materialDesign:HintAssist.Hint="Selected date"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                SelectedDateFormat="Long" />
+
+                                            <Button
+                                                x:Name="Get_Num_Of_Transf_btn"
+                                                Grid.Column="1"
+                                                Margin="100,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Click="Get_Num_Of_Transf_btn_Click"
+                                                Content="Search" />
+
+                                            <Label
+                                                x:Name="Get_Num_Of_Transf_result_lable"
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Content="Number of transfers: "
+                                                FontWeight="Bold"
+                                                Visibility="Hidden" />
+                                            <TextBox
+                                                x:Name="Get_Num_Of_Transf_result"
+                                                Grid.Column="3"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                Visibility="Hidden" />
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                                <Expander Header="💧 Get amount of blood transfer for a particular date">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="50" />
+                                        </Grid.RowDefinitions>
+
+                                        <Label
+                                            Grid.Column="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="Select a date to find out amount of blood transfers carried out on a given date"
+                                            FontSize="20" />
+
+                                        <Grid Grid.Row="1" Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <DatePicker
+                                                x:Name="DP_Get_Amount_Of_BloodTransf"
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Width="240"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                materialDesign:HintAssist.Hint="Selected date"
+                                                materialDesign:HintAssist.IsFloating="True"
+                                                SelectedDateFormat="Long" />
+                                            <Button
+                                                x:Name="Get_Amount_Of_BloodTransf_btn"
+                                                Grid.Column="1"
+                                                Margin="100,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Click="Get_Amount_Of_BloodTransf_btn_Click"
+                                                Content="Search" />
+
+                                            <Label
+                                                x:Name="Get_Amount_Of_BloodTransf_result_lable"
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Content="Volume of transfused blood: "
+                                                FontWeight="Bold"
+                                                Visibility="Hidden" />
+                                            <TextBox
+                                                x:Name="Get_Amount_Of_BloodTransf_result"
+                                                Grid.Column="3"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsReadOnly="True"
+                                                Visibility="Hidden" />
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                                <Expander Header="Import/Export">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button
+                                            x:Name="ExportTakersBtn"
+                                            Grid.Column="0"
+                                            Width="150"
+                                            Margin="100,0,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Click="ExportTakersBtn_Click"
+                                            Content="Export" />
+
+                                        <Button
+                                            x:Name="ImportTakersBtn"
+                                            Grid.Column="1"
+                                            Width="150"
+                                            Margin="100,0,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="Import" Click="ImportTakersBtn_Click" />
+                                    </Grid>
+                                </Expander>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </materialDesign:DialogHost>
+    </Grid>
+</Window>
